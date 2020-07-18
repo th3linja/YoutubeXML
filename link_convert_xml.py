@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from googleapiclient.discovery import build
 
 
-yt_dev_key = 'AIzaSyBCC_W_q8RV950zZwtbVK8S6rK66cn5WHw'
+yt_dev_key = 'API_KEY'
 
 youtube = build('youtube', 'v3', developerKey=yt_dev_key)
 
