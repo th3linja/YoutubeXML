@@ -1,10 +1,9 @@
-import urllib.request
-from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 from googleapiclient.discovery import build
+from pytube import YouTube
 
 
-yt_dev_key = 'AIzaSyBCC_W_q8RV950zZwtbVK8S6rK66cn5WHw'
+yt_dev_key = 'API_KEY'
 
 youtube = build('youtube', 'v3', developerKey=yt_dev_key)
 
@@ -36,6 +35,7 @@ def get_channel_videos(channel_id):
         item = ET.SubElement(channel, 'item')
 
         videoId = videos[0]['snippet']['resourceId']['videoId']
+        yt = YouTube('http://youtube.com/watch?v=' + videoId)
         video_info = youtube.videos().list(part='snippet, contentDetails, statistics, player', id=videoId).execute()
         print(video_info)
 
@@ -46,9 +46,7 @@ def get_channel_videos(channel_id):
         thumbnail.text = video_info['items'][0]['snippet']['thumbnails']['maxres']['url']
 
         url = ET.SubElement(item, 'irc:url')
-        a = (video_info['items'][0]['player']['embedHtml'].find('www'))
-        b = (video_info['items'][0]['player']['embedHtml'].find(videoId)) + len(videoId)
-        url.text = (video_info['items'][0]['player']['embedHtml'][a:b])
+        url.text = yt.streams.get_highest_resolution().url
 
         stream_format = ET.SubElement(item, 'irc:streamformat')
         stream_format.text = 'mp4'
